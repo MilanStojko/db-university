@@ -54,6 +54,19 @@ WHERE `departments`.`name` = "Dipartimento di Matematica"
 GROUP BY `teachers`.`id`
 ORDER BY `teachers`.`name` ASC
 ----------------------------------------------------------------------------------------------------------
+7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per
+superare ciascuno dei suoi esami
+SELECT `student_id` AS `studente`,  `exams`.`course_id` AS `esame`, 
+COUNT(`courses`.`id`) AS `tentativi`, 
+COUNT(CASE WHEN `exam_student`.`vote` <18 THEN 1 END) AS `fallimenti`,
+(COUNT(`courses`.`id`) - COUNT(CASE WHEN `exam_student`.`vote` <18 THEN 1 END)) AS `superato`
+FROM `exam_student`
+INNER JOIN `exams` ON `exams`.`id` = `exam_student`.`exam_id`
+INNER JOIN `courses` ON `courses`.`id` = `exams`.`course_id`
+GROUP BY `studente`, `esame`
+HAVING `superato` > 0
+ORDER BY `studente` ASC
+---------------------------------------------------------------------------------------
 
 
 
